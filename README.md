@@ -101,5 +101,5 @@ Después abrí tu navegador en `http://localhost:5173/`.
 ---
 
 <p align="center">
-  Construido con ☕ y rugby · 2026
+  Construido · 2026
 </p>
