@@ -289,11 +289,6 @@ export default function App() {
         }
 
         .parallax-shape { will-change: transform; }
-
-        /* Sticky scene card panel */
-        .scene-panel {
-          box-shadow: 0 -60px 120px 40px rgba(7,7,8,1);
-        }
       `}</style>
 
       {/* ── FONDO GLOBAL: 4 auroras con hue-rotate ligado al scroll ── */}
@@ -793,9 +788,19 @@ export default function App() {
             </div>
           </div>
 
-          {/* ── PANEL DE CARDS — sube sobre la escena fija ── */}
-          <div className="relative z-10 bg-[#070708] rounded-t-[2rem] scene-panel">
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-14 pb-32">
+          {/* ── CARDS — gradiente progresivo que oscurece la escena desde abajo ── */}
+          <div className="relative z-10">
+            {/* Este div entra desde abajo y oscurece la escena suavemente, sin línea */}
+            <div
+              style={{
+                height: "90vh",
+                background:
+                  "linear-gradient(to bottom, transparent 0%, rgba(7,7,8,0.12) 18%, rgba(7,7,8,0.45) 42%, rgba(7,7,8,0.80) 65%, rgba(7,7,8,0.97) 85%, #070708 100%)",
+                pointerEvents: "none",
+              }}
+            />
+            <div className="bg-[#070708] pb-32">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-8">
 
               {/* Project count header */}
               <div className="flex items-baseline justify-end mb-12 border-b border-white/5 pb-6">
@@ -935,7 +940,8 @@ export default function App() {
                 })}
               </div>
             </div>
-          </div>
+            </div> {/* cierre bg-[#070708] */}
+          </div>   {/* cierre relative z-10 */}
         </section>
 
         {/* EXPERIENCIA */}
