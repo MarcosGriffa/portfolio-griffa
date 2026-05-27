@@ -30,7 +30,6 @@ export default function App() {
   const [mouse, setMouse] = useState({ x: 50, y: 50 });
   const containerRef = useRef(null);
 
-  // Reloj BUE
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -47,14 +46,12 @@ export default function App() {
     return () => clearInterval(id);
   }, []);
 
-  // Scroll para parallax
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Mouse para spotlight
   useEffect(() => {
     let raf = null;
     const onMove = (e) => {
@@ -201,6 +198,11 @@ export default function App() {
           0%, 100% { transform: translate(0, 0) scale(0.9); }
           50% { transform: translate(60px, 60px) scale(1.1); }
         }
+        @keyframes float-slow-4 {
+          0%, 100% { transform: translate(0, 0) scale(1.05); }
+          40% { transform: translate(-80px, -40px) scale(0.95); }
+          70% { transform: translate(50px, 70px) scale(1.1); }
+        }
         @keyframes shimmer {
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
@@ -226,16 +228,22 @@ export default function App() {
           50% { transform: scale(1.1); opacity: 0.2; }
           100% { transform: scale(0.8); opacity: 0.5; }
         }
+        @keyframes bounce-y {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(8px); }
+        }
 
         .fade-up { animation: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) both; }
         .blink { animation: blink 1.5s ease-in-out infinite; }
         .aurora-1 { animation: float-slow 20s ease-in-out infinite; }
         .aurora-2 { animation: float-slow-2 25s ease-in-out infinite; }
         .aurora-3 { animation: float-slow-3 18s ease-in-out infinite; }
+        .aurora-4 { animation: float-slow-4 30s ease-in-out infinite; }
         .spin-slow { animation: spin-slow 40s linear infinite; }
         .spin-slow-rev { animation: spin-slow-rev 60s linear infinite; }
         .float-y { animation: float-y 8s ease-in-out infinite; }
         .pulse-ring { animation: pulse-ring 4s ease-in-out infinite; }
+        .bounce-y { animation: bounce-y 2s ease-in-out infinite; }
 
         .shimmer-text {
           background: linear-gradient(90deg, #fafafa 0%, #bef264 50%, #fafafa 100%);
@@ -281,112 +289,119 @@ export default function App() {
         }
 
         .parallax-shape { will-change: transform; }
+
+        /* Sticky scene card panel */
+        .scene-panel {
+          box-shadow: 0 -60px 120px 40px rgba(7,7,8,1);
+        }
       `}</style>
 
-      {/* CAPA DE FONDO ANIMADO - 3 auroras flotando */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      {/* ── FONDO GLOBAL: 4 auroras con hue-rotate ligado al scroll ── */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{ filter: `hue-rotate(${Math.min(scrollY * 0.014, 75)}deg)` }}
+      >
+        {/* Aurora 1 — Lima top-left */}
         <div
           className="absolute aurora-1 rounded-full"
           style={{
-            top: "-15%",
-            left: "-10%",
-            width: "55vw",
-            height: "55vw",
-            background:
-              "radial-gradient(circle, rgba(190,242,100,0.18) 0%, rgba(190,242,100,0) 60%)",
+            top: "-15%", left: "-10%",
+            width: "55vw", height: "55vw",
+            background: "radial-gradient(circle, rgba(190,242,100,0.30) 0%, rgba(190,242,100,0) 60%)",
             filter: "blur(60px)",
           }}
         />
+        {/* Aurora 2 — Cian right */}
         <div
           className="absolute aurora-2 rounded-full"
           style={{
-            top: "30%",
-            right: "-15%",
-            width: "60vw",
-            height: "60vw",
-            background:
-              "radial-gradient(circle, rgba(251,191,36,0.10) 0%, rgba(251,191,36,0) 60%)",
+            top: "15%", right: "-15%",
+            width: "60vw", height: "60vw",
+            background: "radial-gradient(circle, rgba(34,211,238,0.22) 0%, rgba(34,211,238,0) 60%)",
             filter: "blur(70px)",
           }}
         />
+        {/* Aurora 3 — Violeta center */}
         <div
           className="absolute aurora-3 rounded-full"
           style={{
-            bottom: "-20%",
-            left: "20%",
-            width: "50vw",
-            height: "50vw",
-            background:
-              "radial-gradient(circle, rgba(132,204,22,0.12) 0%, rgba(132,204,22,0) 60%)",
+            top: "55%", left: "20%",
+            width: "50vw", height: "50vw",
+            background: "radial-gradient(circle, rgba(139,92,246,0.20) 0%, rgba(139,92,246,0) 60%)",
             filter: "blur(80px)",
+          }}
+        />
+        {/* Aurora 4 — Amber bottom-right */}
+        <div
+          className="absolute aurora-4 rounded-full"
+          style={{
+            bottom: "-20%", right: "10%",
+            width: "48vw", height: "48vw",
+            background: "radial-gradient(circle, rgba(251,191,36,0.20) 0%, rgba(251,191,36,0) 60%)",
+            filter: "blur(75px)",
           }}
         />
       </div>
 
-      {/* GRID DE FONDO con máscara y parallax sutil */}
+      {/* GRID DE FONDO con parallax */}
       <div
         className="fixed inset-0 pointer-events-none z-0 grid-bg grid-bg-mask"
-        style={{
-          transform: `translateY(${scrollY * 0.35}px)`,
-        }}
+        style={{ transform: `translateY(${scrollY * 0.35}px)` }}
       />
 
-      {/* OBJETOS GEOMÉTRICOS CON PARALLAX (estilo Bake 003) */}
+      {/* ── OBJETOS GEOMÉTRICOS CON PARALLAX — colores variados ── */}
       <div className="absolute inset-0 pointer-events-none z-[1] overflow-hidden" style={{ height: "500vh" }}>
-        {/* Anillo grande arriba a la derecha - se mueve lento */}
+
+        {/* Anillo — LIMA */}
         <div
           className="parallax-shape absolute opacity-50"
           style={{
-            top: "10vh",
-            right: "5vw",
+            top: "10vh", right: "5vw",
             transform: `translateY(${scrollY * -0.9}px) rotate(${scrollY * 0.12}deg)`,
           }}
         >
           <svg width="320" height="320" viewBox="0 0 320 320" fill="none">
-            <circle cx="160" cy="160" r="158" stroke="rgba(190,242,100,0.4)" strokeWidth="1" strokeDasharray="2 4" />
-            <circle cx="160" cy="160" r="120" stroke="rgba(190,242,100,0.25)" strokeWidth="1" />
-            <circle cx="160" cy="160" r="80" stroke="rgba(190,242,100,0.15)" strokeWidth="1" />
+            <circle cx="160" cy="160" r="158" stroke="rgba(190,242,100,0.5)" strokeWidth="1" strokeDasharray="2 4" />
+            <circle cx="160" cy="160" r="120" stroke="rgba(190,242,100,0.30)" strokeWidth="1" />
+            <circle cx="160" cy="160" r="80"  stroke="rgba(190,242,100,0.18)" strokeWidth="1" />
           </svg>
         </div>
 
-        {/* Cuadrado rotativo arriba a la izquierda */}
+        {/* Cuadrado — VIOLETA */}
         <div
           className="parallax-shape absolute opacity-40"
           style={{
-            top: "60vh",
-            left: "-5vw",
+            top: "60vh", left: "-5vw",
             transform: `translateY(${scrollY * -1.3}px) rotate(${45 + scrollY * 0.18}deg)`,
           }}
         >
-          <div className="w-48 h-48 border border-amber-300/40 rounded-lg" />
+          <div className="w-48 h-48 border border-violet-400/50 rounded-lg" />
         </div>
 
-        {/* Triángulo medio izquierda */}
+        {/* Triángulo — CIAN */}
         <div
-          className="parallax-shape absolute opacity-40"
+          className="parallax-shape absolute opacity-45"
           style={{
-            top: "120vh",
-            left: "8vw",
+            top: "120vh", left: "8vw",
             transform: `translateY(${scrollY * -0.75}px) rotate(${-scrollY * 0.10}deg)`,
           }}
         >
           <svg width="200" height="200" viewBox="0 0 200 200">
-            <polygon points="100,20 180,180 20,180" stroke="rgba(132,204,22,0.5)" strokeWidth="1" fill="none" />
-            <polygon points="100,60 150,160 50,160" stroke="rgba(132,204,22,0.3)" strokeWidth="1" fill="none" />
+            <polygon points="100,20 180,180 20,180" stroke="rgba(34,211,238,0.60)" strokeWidth="1" fill="none" />
+            <polygon points="100,60 150,160 50,160" stroke="rgba(34,211,238,0.35)" strokeWidth="1" fill="none" />
           </svg>
         </div>
 
-        {/* Anillo orbital con punto - derecha media */}
+        {/* Anillo orbital — LIMA */}
         <div
           className="parallax-shape absolute opacity-50"
           style={{
-            top: "180vh",
-            right: "10vw",
+            top: "180vh", right: "10vw",
             transform: `translateY(${scrollY * -1.2}px)`,
           }}
         >
           <div className="relative w-64 h-64">
-            <div className="absolute inset-0 rounded-full border border-lime-300/30 spin-slow" />
+            <div className="absolute inset-0 rounded-full border border-lime-300/35 spin-slow" />
             <div className="absolute inset-4 rounded-full border border-lime-300/20" />
             <div className="absolute inset-0 spin-slow">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-lime-300" />
@@ -394,47 +409,50 @@ export default function App() {
           </div>
         </div>
 
-        {/* Cruz minimalista */}
+        {/* Cruz — ROSA */}
         <div
           className="parallax-shape absolute opacity-60"
           style={{
-            top: "240vh",
-            left: "15vw",
+            top: "240vh", left: "15vw",
             transform: `translateY(${scrollY * -1.6}px) rotate(${scrollY * 0.22}deg)`,
           }}
         >
           <div className="relative w-32 h-32">
-            <div className="absolute top-1/2 left-0 right-0 h-px bg-lime-300/40 -translate-y-1/2" />
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-lime-300/40 -translate-x-1/2" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-lime-300/60" />
+            <div className="absolute top-1/2 left-0 right-0 h-px bg-pink-300/55 -translate-y-1/2" />
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-pink-300/55 -translate-x-1/2" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-pink-300/70" />
           </div>
         </div>
 
-        {/* Hexágono derecha */}
+        {/* Hexágono — CIAN */}
         <div
           className="parallax-shape absolute opacity-45"
           style={{
-            top: "300vh",
-            right: "8vw",
+            top: "300vh", right: "8vw",
             transform: `translateY(${scrollY * -1.0}px) rotate(${scrollY * -0.15}deg)`,
           }}
         >
           <svg width="180" height="180" viewBox="0 0 180 180">
             <polygon
               points="90,10 160,50 160,130 90,170 20,130 20,50"
-              stroke="rgba(190,242,100,0.4)"
+              stroke="rgba(34,211,238,0.55)"
+              strokeWidth="1"
+              fill="none"
+            />
+            <polygon
+              points="90,35 140,62 140,118 90,145 40,118 40,62"
+              stroke="rgba(34,211,238,0.25)"
               strokeWidth="1"
               fill="none"
             />
           </svg>
         </div>
 
-        {/* Líneas verticales (efecto velocidad) */}
+        {/* Líneas verticales — VIOLETA */}
         <div
-          className="parallax-shape absolute opacity-40"
+          className="parallax-shape absolute opacity-45"
           style={{
-            top: "350vh",
-            left: "50%",
+            top: "350vh", left: "50%",
             transform: `translateX(-50%) translateY(${scrollY * -0.65}px)`,
           }}
         >
@@ -442,31 +460,30 @@ export default function App() {
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className="w-px bg-gradient-to-b from-transparent via-lime-300/40 to-transparent"
+                className="w-px bg-gradient-to-b from-transparent via-violet-400/50 to-transparent"
                 style={{ height: `${80 + i * 20}px` }}
               />
             ))}
           </div>
         </div>
 
-        {/* Círculos concéntricos abajo */}
+        {/* Círculos concéntricos — AMBER */}
         <div
           className="parallax-shape absolute opacity-45"
           style={{
-            top: "400vh",
-            left: "12vw",
+            top: "400vh", left: "12vw",
             transform: `translateY(${scrollY * -1.4}px)`,
           }}
         >
           <div className="relative w-56 h-56">
-            <div className="absolute inset-0 rounded-full border border-amber-300/30 pulse-ring" />
-            <div className="absolute inset-6 rounded-full border border-amber-300/20" />
-            <div className="absolute inset-12 rounded-full border border-amber-300/10" />
+            <div className="absolute inset-0  rounded-full border border-amber-300/40 pulse-ring" />
+            <div className="absolute inset-6  rounded-full border border-amber-300/25" />
+            <div className="absolute inset-12 rounded-full border border-amber-300/12" />
           </div>
         </div>
       </div>
 
-      {/* SPOTLIGHT que sigue al mouse */}
+      {/* SPOTLIGHT */}
       <div
         className="fixed inset-0 pointer-events-none z-[1] transition-opacity duration-300"
         style={{
@@ -476,8 +493,9 @@ export default function App() {
 
       <div className="noise" />
 
-      {/* CONTENIDO */}
+      {/* ──────────────── CONTENIDO ──────────────── */}
       <div className="relative z-10">
+
         {/* NAV */}
         <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#070708]/60 border-b border-white/[0.06]">
           <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between font-mono text-xs">
@@ -495,9 +513,7 @@ export default function App() {
                     setActiveSection(s);
                     document.getElementById(s)?.scrollIntoView({ behavior: "smooth" });
                   }}
-                  className={`hover:text-lime-300 transition-colors ${
-                    activeSection === s ? "text-lime-300" : ""
-                  }`}
+                  className={`hover:text-lime-300 transition-colors ${activeSection === s ? "text-lime-300" : ""}`}
                 >
                   /{s}
                 </button>
@@ -566,9 +582,9 @@ export default function App() {
 
           <div className="mt-24 lg:mt-32 grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-12 border-t border-white/5 pt-10">
             {[
-              { num: "1°", label: "año · Lic. Ciencia de Datos · UBA" },
-              { num: "12+", label: "años de rugby competitivo" },
-              { num: "5", label: "proyectos end-to-end" },
+              { num: "1°",   label: "año · Lic. Ciencia de Datos · UBA" },
+              { num: "12+",  label: "años de rugby competitivo" },
+              { num: "5",    label: "proyectos end-to-end" },
               { num: "2024", label: "presente · Surveyor en Ferrosider" },
             ].map((m, i) => (
               <div key={i} className="fade-up" style={{ animationDelay: `${0.6 + i * 0.1}s` }}>
@@ -606,9 +622,7 @@ export default function App() {
                     <Database className="h-5 w-5 text-lime-300" />
                   </div>
                   <div>
-                    <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
-                      /01
-                    </div>
+                    <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">/01</div>
                     <h3 className="font-display text-2xl">Data Science</h3>
                   </div>
                 </div>
@@ -618,14 +632,9 @@ export default function App() {
                 </p>
                 <ul className="space-y-3">
                   {dataSkills.map((s, i) => (
-                    <li
-                      key={i}
-                      className="flex items-baseline justify-between border-b border-white/5 pb-3 hover:border-lime-300/30 transition-colors"
-                    >
+                    <li key={i} className="flex items-baseline justify-between border-b border-white/5 pb-3 hover:border-lime-300/30 transition-colors">
                       <span className="font-body text-zinc-200">{s.name}</span>
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">
-                        {s.level}
-                      </span>
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">{s.level}</span>
                     </li>
                   ))}
                 </ul>
@@ -640,9 +649,7 @@ export default function App() {
                     <Workflow className="h-5 w-5 text-amber-300" />
                   </div>
                   <div>
-                    <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
-                      /02
-                    </div>
+                    <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">/02</div>
                     <h3 className="font-display text-2xl">Automatización + IA</h3>
                   </div>
                 </div>
@@ -652,19 +659,12 @@ export default function App() {
                 </p>
                 <ul className="space-y-3">
                   {automationSkills.map((s, i) => (
-                    <li
-                      key={i}
-                      className="flex items-baseline justify-between border-b border-white/5 pb-3 hover:border-amber-300/30 transition-colors"
-                    >
+                    <li key={i} className="flex items-baseline justify-between border-b border-white/5 pb-3 hover:border-amber-300/30 transition-colors">
                       <span className="font-body text-zinc-200 flex items-center gap-2">
                         {s.name}
-                        {s.name.includes("Claude") && (
-                          <Brain className="h-3 w-3 text-amber-300" />
-                        )}
+                        {s.name.includes("Claude") && <Brain className="h-3 w-3 text-amber-300" />}
                       </span>
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">
-                        {s.level}
-                      </span>
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">{s.level}</span>
                     </li>
                   ))}
                 </ul>
@@ -672,7 +672,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Banda destacada sobre IA */}
           <div className="mt-6 relative bg-gradient-to-r from-amber-300/10 via-lime-300/5 to-transparent border border-amber-300/20 rounded-2xl p-6 lg:p-8 backdrop-blur-sm overflow-hidden">
             <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-amber-300/10 blur-3xl" />
             <div className="relative flex items-start gap-4">
@@ -694,168 +693,248 @@ export default function App() {
           </div>
         </section>
 
-        {/* PROYECTOS */}
-        <section
-          id="trabajo"
-          className="relative max-w-7xl mx-auto px-6 lg:px-12 py-24 lg:py-32 border-t border-white/5"
-        >
-          <div className="flex items-baseline justify-between mb-16">
-            <div>
-              <div className="font-mono text-xs text-zinc-500 mb-3">[003] · trabajo seleccionado</div>
-              <h2 className="font-display text-5xl lg:text-7xl tracking-[-0.03em]">
-                Lo que <span className="italic text-lime-300">construí.</span>
-              </h2>
+        {/* ══════════════════════════════════════════════════════════════
+            PROYECTOS — efecto Rockstar sticky scroll
+            La escena se queda fija y las cards suben sobre ella
+        ══════════════════════════════════════════════════════════════ */}
+        <section id="trabajo" className="relative">
+
+          {/* ── ESCENA FIJA (sticky) ── */}
+          <div
+            className="sticky top-0 h-screen z-0 overflow-hidden flex flex-col"
+            style={{
+              background: "linear-gradient(140deg, #08040f 0%, #030d0a 50%, #06040f 100%)",
+            }}
+          >
+            {/* Blobs vividos exclusivos de esta escena */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div
+                className="absolute aurora-1 rounded-full"
+                style={{
+                  top: "-10%", left: "-8%",
+                  width: "70vw", height: "70vw",
+                  background: "radial-gradient(circle, rgba(139,92,246,0.55) 0%, transparent 60%)",
+                  filter: "blur(80px)",
+                }}
+              />
+              <div
+                className="absolute aurora-2 rounded-full"
+                style={{
+                  bottom: "-10%", right: "-8%",
+                  width: "65vw", height: "65vw",
+                  background: "radial-gradient(circle, rgba(190,242,100,0.50) 0%, transparent 60%)",
+                  filter: "blur(70px)",
+                }}
+              />
+              <div
+                className="absolute aurora-3 rounded-full"
+                style={{
+                  top: "30%", right: "15%",
+                  width: "45vw", height: "45vw",
+                  background: "radial-gradient(circle, rgba(34,211,238,0.28) 0%, transparent 60%)",
+                  filter: "blur(60px)",
+                }}
+              />
             </div>
-            <div className="hidden lg:block font-mono text-xs text-zinc-500">
-              {projects.length.toString().padStart(2, "0")} proyectos · ver en{" "}
-              <a
-                href="https://github.com/MarcosGriffa"
-                target="_blank"
-                rel="noreferrer"
-                className="text-lime-300 hover:underline"
-              >
-                github
-              </a>
+
+            {/* Grid con más opacidad en la escena */}
+            <div className="absolute inset-0 grid-bg opacity-[0.07]" />
+
+            {/* Número decorativo gigante de fondo */}
+            <div
+              className="absolute bottom-0 right-0 font-display leading-none select-none pointer-events-none"
+              style={{
+                fontSize: "clamp(12rem,35vw,34rem)",
+                opacity: 0.035,
+                color: "white",
+                lineHeight: 0.85,
+              }}
+            >
+              03
+            </div>
+
+            {/* Líneas de escaneo horizontales sutiles */}
+            <div className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.012) 3px, rgba(255,255,255,0.012) 4px)",
+              }}
+            />
+
+            {/* Contenido de la escena */}
+            <div className="relative z-10 flex flex-col justify-between h-full py-10 lg:py-14 max-w-7xl mx-auto px-6 lg:px-12 w-full">
+              {/* Top label */}
+              <div className="font-mono text-xs text-zinc-500 flex items-center gap-3">
+                <span className="h-1.5 w-1.5 rounded-full bg-violet-400 blink" />
+                [003] · trabajo seleccionado
+              </div>
+
+              {/* Título grande */}
+              <div>
+                <h2
+                  className="font-display leading-[0.88] tracking-[-0.04em] mb-8"
+                  style={{ fontSize: "clamp(3.5rem, 10vw, 10rem)" }}
+                >
+                  Lo que
+                  <br />
+                  <span className="italic text-lime-300">construí.</span>
+                </h2>
+
+                <div className="flex flex-wrap items-center gap-6">
+                  <div className="font-mono text-xs text-zinc-400 flex items-center gap-2">
+                    <span className="h-1 w-6 bg-lime-300/50 rounded-full" />
+                    {projects.length.toString().padStart(2, "0")} proyectos seleccionados
+                  </div>
+                  <div className="font-mono text-xs text-zinc-600 flex items-center gap-2 bounce-y">
+                    <span>↓</span>
+                    <span>scrolleá para explorar</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {projects.map((p, i) => {
-              const Icon = p.icon;
+          {/* ── PANEL DE CARDS — sube sobre la escena fija ── */}
+          <div className="relative z-10 bg-[#070708] rounded-t-[2rem] scene-panel">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-14 pb-32">
 
-              if (p.featured) {
-                return (
+              {/* Project count header */}
+              <div className="flex items-baseline justify-end mb-12 border-b border-white/5 pb-6">
+                <div className="font-mono text-xs text-zinc-500">
+                  {projects.length.toString().padStart(2, "0")} proyectos · ver en{" "}
                   <a
-                    key={p.id}
-                    href={p.link}
+                    href="https://github.com/MarcosGriffa"
                     target="_blank"
                     rel="noreferrer"
-                    className={`card-hover group relative ${p.span} bg-gradient-to-br from-lime-300/[0.07] via-white/[0.03] to-transparent backdrop-blur-sm border border-lime-300/25 rounded-2xl p-8 lg:p-10 overflow-hidden hover:border-lime-300/60 transition-all duration-500 cursor-pointer fade-up block`}
-                    style={{ animationDelay: `${i * 0.1}s` }}
+                    className="text-lime-300 hover:underline"
                   >
-                    <div className="glow-spot absolute -top-40 -right-40 h-80 w-80 rounded-full bg-lime-300/15 blur-3xl opacity-0 transition-opacity duration-700" />
-                    <div className="absolute top-4 right-4 font-mono text-[10px] uppercase tracking-widest text-lime-300/70 border border-lime-300/30 rounded-full px-3 py-1 bg-lime-300/5">
-                      · proyecto destacado
-                    </div>
+                    github
+                  </a>
+                </div>
+              </div>
 
-                    <div className="relative flex items-start justify-between mb-8">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg border border-lime-300/40 bg-lime-300/10 flex items-center justify-center group-hover:bg-lime-300/20 transition-colors">
-                          <Icon className="h-5 w-5 text-lime-300" />
+              {/* Cards grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {projects.map((p, i) => {
+                  const Icon = p.icon;
+
+                  if (p.featured) {
+                    return (
+                      <a
+                        key={p.id}
+                        href={p.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`card-hover group relative ${p.span} bg-gradient-to-br from-lime-300/[0.07] via-white/[0.03] to-transparent backdrop-blur-sm border border-lime-300/25 rounded-2xl p-8 lg:p-10 overflow-hidden hover:border-lime-300/60 transition-all duration-500 cursor-pointer fade-up block`}
+                        style={{ animationDelay: `${i * 0.1}s` }}
+                      >
+                        <div className="glow-spot absolute -top-40 -right-40 h-80 w-80 rounded-full bg-lime-300/15 blur-3xl opacity-0 transition-opacity duration-700" />
+                        <div className="absolute top-4 right-4 font-mono text-[10px] uppercase tracking-widest text-lime-300/70 border border-lime-300/30 rounded-full px-3 py-1 bg-lime-300/5">
+                          · proyecto destacado
                         </div>
-                        <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
-                          {p.id} · {p.kicker}
-                        </div>
-                      </div>
-                      <ArrowUpRight className="arrow-icon h-5 w-5 text-zinc-600 group-hover:text-lime-300 transition-all duration-300 mt-6" />
-                    </div>
 
-                    <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8">
-                      <div>
-                        <h3 className="font-display text-4xl lg:text-5xl tracking-[-0.02em] mb-4">
-                          {p.title}
-                        </h3>
-                        <p className="font-body text-zinc-300 leading-relaxed mb-4">
-                          {p.result}
-                        </p>
-                        <p className="font-body text-sm text-zinc-500 leading-relaxed">
-                          {p.detail}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-col justify-between gap-6">
-                        <div className="grid grid-cols-3 gap-3">
-                          {[
-                            { label: "scraping", desc: "Computrabajo AR" },
-                            { label: "IA/LLM", desc: "LLaMA 3.3 · Groq" },
-                            { label: "entrega", desc: "Bot Telegram" },
-                          ].map((feat) => (
-                            <div key={feat.label} className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-3">
-                              <div className="font-mono text-[9px] uppercase tracking-widest text-lime-300/70 mb-1">{feat.label}</div>
-                              <div className="font-body text-xs text-zinc-300">{feat.desc}</div>
+                        <div className="relative flex items-start justify-between mb-8">
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-lg border border-lime-300/40 bg-lime-300/10 flex items-center justify-center group-hover:bg-lime-300/20 transition-colors">
+                              <Icon className="h-5 w-5 text-lime-300" />
                             </div>
+                            <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+                              {p.id} · {p.kicker}
+                            </div>
+                          </div>
+                          <ArrowUpRight className="arrow-icon h-5 w-5 text-zinc-600 group-hover:text-lime-300 transition-all duration-300 mt-6" />
+                        </div>
+
+                        <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8">
+                          <div>
+                            <h3 className="font-display text-4xl lg:text-5xl tracking-[-0.02em] mb-4">
+                              {p.title}
+                            </h3>
+                            <p className="font-body text-zinc-300 leading-relaxed mb-4">{p.result}</p>
+                            <p className="font-body text-sm text-zinc-500 leading-relaxed">{p.detail}</p>
+                          </div>
+
+                          <div className="flex flex-col justify-between gap-6">
+                            <div className="grid grid-cols-3 gap-3">
+                              {[
+                                { label: "scraping", desc: "Computrabajo AR" },
+                                { label: "IA/LLM",   desc: "LLaMA 3.3 · Groq" },
+                                { label: "entrega",  desc: "Bot Telegram" },
+                              ].map((feat) => (
+                                <div key={feat.label} className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-3">
+                                  <div className="font-mono text-[9px] uppercase tracking-widest text-lime-300/70 mb-1">{feat.label}</div>
+                                  <div className="font-body text-xs text-zinc-300">{feat.desc}</div>
+                                </div>
+                              ))}
+                            </div>
+
+                            <div className="pt-6 border-t border-white/5 flex items-end justify-between">
+                              <div>
+                                <div className="font-display text-4xl text-lime-300">{p.metric}</div>
+                                <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 max-w-[180px]">
+                                  {p.metricLabel}
+                                </div>
+                              </div>
+                              <div className="flex flex-wrap gap-1.5 justify-end max-w-[55%]">
+                                {p.tags.map((t) => (
+                                  <span key={t} className="font-mono text-[10px] px-2 py-1 rounded-md bg-lime-300/5 border border-lime-300/15 text-zinc-400">
+                                    {t}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    );
+                  }
+
+                  return (
+                    <a
+                      key={p.id}
+                      href={p.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`card-hover group relative ${p.span} bg-gradient-to-br from-white/[0.04] to-transparent backdrop-blur-sm border border-white/10 rounded-2xl p-8 lg:p-10 overflow-hidden hover:border-lime-300/40 transition-all duration-500 cursor-pointer fade-up block`}
+                      style={{ animationDelay: `${i * 0.1}s` }}
+                    >
+                      <div className="glow-spot absolute -top-32 -right-32 h-64 w-64 rounded-full bg-lime-300/10 blur-3xl opacity-0 transition-opacity duration-700" />
+
+                      <div className="relative flex items-start justify-between mb-8">
+                        <div className="flex items-center gap-3">
+                          <div className="h-9 w-9 rounded-lg border border-white/10 bg-white/5 flex items-center justify-center group-hover:border-lime-300/40 group-hover:bg-lime-300/10 transition-colors">
+                            <Icon className="h-4 w-4 text-zinc-300 group-hover:text-lime-300 transition-colors" />
+                          </div>
+                          <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+                            {p.id} · {p.kicker}
+                          </div>
+                        </div>
+                        <ArrowUpRight className="arrow-icon h-5 w-5 text-zinc-600 group-hover:text-lime-300 transition-all duration-300" />
+                      </div>
+
+                      <h3 className="relative font-display text-3xl lg:text-4xl tracking-[-0.02em] mb-4">{p.title}</h3>
+                      <p className="relative font-body text-zinc-300 leading-relaxed mb-4">{p.result}</p>
+                      <p className="relative font-body text-sm text-zinc-500 leading-relaxed mb-8">{p.detail}</p>
+
+                      <div className="relative flex items-end justify-between mt-auto pt-6 border-t border-white/5">
+                        <div>
+                          <div className="font-display text-3xl text-lime-300">{p.metric}</div>
+                          <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 max-w-[180px]">
+                            {p.metricLabel}
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 justify-end max-w-[60%]">
+                          {p.tags.map((t) => (
+                            <span key={t} className="font-mono text-[10px] px-2 py-1 rounded-md bg-white/5 border border-white/5 text-zinc-400">
+                              {t}
+                            </span>
                           ))}
                         </div>
-
-                        <div className="pt-6 border-t border-white/5 flex items-end justify-between">
-                          <div>
-                            <div className="font-display text-4xl text-lime-300">{p.metric}</div>
-                            <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 max-w-[180px]">
-                              {p.metricLabel}
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5 justify-end max-w-[55%]">
-                            {p.tags.map((t) => (
-                              <span
-                                key={t}
-                                className="font-mono text-[10px] px-2 py-1 rounded-md bg-lime-300/5 border border-lime-300/15 text-zinc-400"
-                              >
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
                       </div>
-                    </div>
-                  </a>
-                );
-              }
-
-              return (
-                <a
-                  key={p.id}
-                  href={p.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`card-hover group relative ${p.span} bg-gradient-to-br from-white/[0.04] to-transparent backdrop-blur-sm border border-white/10 rounded-2xl p-8 lg:p-10 overflow-hidden hover:border-lime-300/40 transition-all duration-500 cursor-pointer fade-up block`}
-                  style={{ animationDelay: `${i * 0.1}s` }}
-                >
-                  <div className="glow-spot absolute -top-32 -right-32 h-64 w-64 rounded-full bg-lime-300/10 blur-3xl opacity-0 transition-opacity duration-700" />
-
-                  <div className="relative flex items-start justify-between mb-8">
-                    <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-lg border border-white/10 bg-white/5 flex items-center justify-center group-hover:border-lime-300/40 group-hover:bg-lime-300/10 transition-colors">
-                        <Icon className="h-4 w-4 text-zinc-300 group-hover:text-lime-300 transition-colors" />
-                      </div>
-                      <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
-                        {p.id} · {p.kicker}
-                      </div>
-                    </div>
-                    <ArrowUpRight className="arrow-icon h-5 w-5 text-zinc-600 group-hover:text-lime-300 transition-all duration-300" />
-                  </div>
-
-                  <h3 className="relative font-display text-3xl lg:text-4xl tracking-[-0.02em] mb-4">
-                    {p.title}
-                  </h3>
-
-                  <p className="relative font-body text-zinc-300 leading-relaxed mb-4">
-                    {p.result}
-                  </p>
-                  <p className="relative font-body text-sm text-zinc-500 leading-relaxed mb-8">
-                    {p.detail}
-                  </p>
-
-                  <div className="relative flex items-end justify-between mt-auto pt-6 border-t border-white/5">
-                    <div>
-                      <div className="font-display text-3xl text-lime-300">{p.metric}</div>
-                      <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 max-w-[180px]">
-                        {p.metricLabel}
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 justify-end max-w-[60%]">
-                      {p.tags.map((t) => (
-                        <span
-                          key={t}
-                          className="font-mono text-[10px] px-2 py-1 rounded-md bg-white/5 border border-white/5 text-zinc-400"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </a>
-              );
-            })}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -908,9 +987,7 @@ export default function App() {
                     <div className="lg:col-span-7">
                       <h3 className="font-display text-2xl">{j.role}</h3>
                       <div className="font-mono text-xs text-zinc-500 mt-1">{j.company}</div>
-                      <p className="font-body text-sm text-zinc-400 mt-3 leading-relaxed">
-                        {j.desc}
-                      </p>
+                      <p className="font-body text-sm text-zinc-400 mt-3 leading-relaxed">{j.desc}</p>
                     </div>
                     <div className="lg:col-span-4 lg:text-right">
                       <span className="font-mono text-xs text-zinc-500">{j.period}</span>
@@ -922,7 +999,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* SOBRE MÍ - Rugby + Soft skills */}
+        {/* SOBRE MÍ */}
         <section
           id="sobre-mi"
           className="relative max-w-7xl mx-auto px-6 lg:px-12 py-24 lg:py-32 border-t border-white/5"
@@ -942,34 +1019,19 @@ export default function App() {
                 aguantar presión cuando el resultado depende del equipo.
               </p>
               <p className="font-body text-zinc-400 leading-relaxed">
-                Eso es lo que llevo a cada proyecto: <span className="text-lime-300">no busco
-                brillar solo</span>, busco que el sistema funcione. Y cuando algo se rompe, no es
-                "culpa de alguien", es algo que el equipo soluciona junto.
+                Eso es lo que llevo a cada proyecto:{" "}
+                <span className="text-lime-300">no busco brillar solo</span>, busco que el sistema
+                funcione. Y cuando algo se rompe, no es "culpa de alguien", es algo que el equipo
+                soluciona junto.
               </p>
             </div>
 
             <div className="lg:col-span-7 grid grid-cols-2 gap-4">
               {[
-                {
-                  icon: Trophy,
-                  title: "Disciplina",
-                  desc: "Entrenamiento sostenido durante más de una década, en paralelo a trabajo y estudio.",
-                },
-                {
-                  icon: Users,
-                  title: "Trabajo en equipo",
-                  desc: "Coordinación con compañeros bajo presión y comunicación clara en jugadas complejas.",
-                },
-                {
-                  icon: Target,
-                  title: "Compromiso",
-                  desc: "Cumplir con el rol asignado aunque no sea el más visible. Confianza ganada con consistencia.",
-                },
-                {
-                  icon: Zap,
-                  title: "Mentalidad competitiva",
-                  desc: "Aceptar el error, ajustar y volver a intentar. Cada partido es una iteración.",
-                },
+                { icon: Trophy, title: "Disciplina",           desc: "Entrenamiento sostenido durante más de una década, en paralelo a trabajo y estudio." },
+                { icon: Users,  title: "Trabajo en equipo",    desc: "Coordinación con compañeros bajo presión y comunicación clara en jugadas complejas." },
+                { icon: Target, title: "Compromiso",           desc: "Cumplir con el rol asignado aunque no sea el más visible. Confianza ganada con consistencia." },
+                { icon: Zap,    title: "Mentalidad competitiva", desc: "Aceptar el error, ajustar y volver a intentar. Cada partido es una iteración." },
               ].map((v, i) => {
                 const Icon = v.icon;
                 return (
@@ -1010,45 +1072,27 @@ export default function App() {
                 <Mail className="h-6 w-6" />
                 <ArrowUpRight className="h-6 w-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
               </div>
-              <div className="font-mono text-[10px] uppercase tracking-widest mb-2">
-                email directo
-              </div>
+              <div className="font-mono text-[10px] uppercase tracking-widest mb-2">email directo</div>
               <div className="font-display text-2xl lg:text-3xl">marcosgriffa04@gmail.com</div>
             </a>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <a
-                href="https://github.com/MarcosGriffa"
-                target="_blank"
-                rel="noreferrer"
-                className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-lime-300/40 hover:bg-white/[0.07] transition-all"
-              >
+              <a href="https://github.com/MarcosGriffa" target="_blank" rel="noreferrer"
+                className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-lime-300/40 hover:bg-white/[0.07] transition-all">
                 <Code2 className="h-5 w-5 mb-6 text-zinc-300" />
-                <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-1">
-                  github
-                </div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-1">github</div>
                 <div className="font-display text-lg">MarcosGriffa</div>
               </a>
-              <a
-                href="https://linkedin.com/in/marcos-griffa-605aa3259"
-                target="_blank"
-                rel="noreferrer"
-                className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-lime-300/40 hover:bg-white/[0.07] transition-all"
-              >
+              <a href="https://linkedin.com/in/marcos-griffa-605aa3259" target="_blank" rel="noreferrer"
+                className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-lime-300/40 hover:bg-white/[0.07] transition-all">
                 <Briefcase className="h-5 w-5 mb-6 text-zinc-300" />
-                <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-1">
-                  linkedin
-                </div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-1">linkedin</div>
                 <div className="font-display text-lg">marcos-griffa</div>
               </a>
-              <a
-                href="tel:+541161428659"
-                className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-lime-300/40 hover:bg-white/[0.07] transition-all col-span-full"
-              >
+              <a href="tel:+541161428659"
+                className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-lime-300/40 hover:bg-white/[0.07] transition-all col-span-full">
                 <Phone className="h-5 w-5 mb-6 text-zinc-300" />
-                <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-1">
-                  teléfono
-                </div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-1">teléfono</div>
                 <div className="font-display text-lg">+54 11 6142-8659</div>
               </a>
             </div>
