@@ -19,6 +19,8 @@ import {
   Trophy,
   Users,
   Zap,
+  Bot,
+  Search,
 } from "lucide-react";
 
 export default function App() {
@@ -90,6 +92,22 @@ export default function App() {
   ];
 
   const projects = [
+    {
+      id: "00",
+      title: "Job Scraping Pipeline",
+      kicker: "IA · Scraping · Bot Telegram",
+      icon: Bot,
+      span: "lg:col-span-3",
+      featured: true,
+      tags: ["Python", "BeautifulSoup4", "Groq / LLaMA 3.3", "SQLite", "Telegram Bot", "Node.js"],
+      link: "https://github.com/MarcosGriffa/job_scraping",
+      result:
+        "Pipeline end-to-end que extrae ofertas IT junior de Argentina, las rankea con IA contra el perfil del candidato y genera CVs personalizados en .docx, todo controlado desde un bot de Telegram.",
+      detail:
+        "Scraping de Computrabajo → enriquecimiento con LLaMA 3.3 via Groq para detectar stack y seniority → ranking por keyword matching → Top 10 notificado por Telegram → CV adaptado para cada oferta seleccionada generado en Node.js.",
+      metric: "Top 10",
+      metricLabel: "empleos rankeados con IA por día",
+    },
     {
       id: "01",
       title: "Estudio Griffa",
@@ -309,7 +327,7 @@ export default function App() {
       <div
         className="fixed inset-0 pointer-events-none z-0 grid-bg grid-bg-mask"
         style={{
-          transform: `translateY(${scrollY * 0.15}px)`,
+          transform: `translateY(${scrollY * 0.35}px)`,
         }}
       />
 
@@ -317,11 +335,11 @@ export default function App() {
       <div className="absolute inset-0 pointer-events-none z-[1] overflow-hidden" style={{ height: "500vh" }}>
         {/* Anillo grande arriba a la derecha - se mueve lento */}
         <div
-          className="parallax-shape absolute opacity-30"
+          className="parallax-shape absolute opacity-50"
           style={{
             top: "10vh",
             right: "5vw",
-            transform: `translateY(${scrollY * -0.3}px) rotate(${scrollY * 0.05}deg)`,
+            transform: `translateY(${scrollY * -0.9}px) rotate(${scrollY * 0.12}deg)`,
           }}
         >
           <svg width="320" height="320" viewBox="0 0 320 320" fill="none">
@@ -333,11 +351,11 @@ export default function App() {
 
         {/* Cuadrado rotativo arriba a la izquierda */}
         <div
-          className="parallax-shape absolute opacity-25"
+          className="parallax-shape absolute opacity-40"
           style={{
             top: "60vh",
             left: "-5vw",
-            transform: `translateY(${scrollY * -0.45}px) rotate(${45 + scrollY * 0.08}deg)`,
+            transform: `translateY(${scrollY * -1.3}px) rotate(${45 + scrollY * 0.18}deg)`,
           }}
         >
           <div className="w-48 h-48 border border-amber-300/40 rounded-lg" />
@@ -345,11 +363,11 @@ export default function App() {
 
         {/* Triángulo medio izquierda */}
         <div
-          className="parallax-shape absolute opacity-20"
+          className="parallax-shape absolute opacity-40"
           style={{
             top: "120vh",
             left: "8vw",
-            transform: `translateY(${scrollY * -0.25}px) rotate(${-scrollY * 0.04}deg)`,
+            transform: `translateY(${scrollY * -0.75}px) rotate(${-scrollY * 0.10}deg)`,
           }}
         >
           <svg width="200" height="200" viewBox="0 0 200 200">
@@ -360,11 +378,11 @@ export default function App() {
 
         {/* Anillo orbital con punto - derecha media */}
         <div
-          className="parallax-shape absolute opacity-30"
+          className="parallax-shape absolute opacity-50"
           style={{
             top: "180vh",
             right: "10vw",
-            transform: `translateY(${scrollY * -0.4}px)`,
+            transform: `translateY(${scrollY * -1.2}px)`,
           }}
         >
           <div className="relative w-64 h-64">
@@ -378,11 +396,11 @@ export default function App() {
 
         {/* Cruz minimalista */}
         <div
-          className="parallax-shape absolute opacity-40"
+          className="parallax-shape absolute opacity-60"
           style={{
             top: "240vh",
             left: "15vw",
-            transform: `translateY(${scrollY * -0.55}px) rotate(${scrollY * 0.1}deg)`,
+            transform: `translateY(${scrollY * -1.6}px) rotate(${scrollY * 0.22}deg)`,
           }}
         >
           <div className="relative w-32 h-32">
@@ -394,11 +412,11 @@ export default function App() {
 
         {/* Hexágono derecha */}
         <div
-          className="parallax-shape absolute opacity-25"
+          className="parallax-shape absolute opacity-45"
           style={{
             top: "300vh",
             right: "8vw",
-            transform: `translateY(${scrollY * -0.35}px) rotate(${scrollY * -0.06}deg)`,
+            transform: `translateY(${scrollY * -1.0}px) rotate(${scrollY * -0.15}deg)`,
           }}
         >
           <svg width="180" height="180" viewBox="0 0 180 180">
@@ -413,11 +431,11 @@ export default function App() {
 
         {/* Líneas verticales (efecto velocidad) */}
         <div
-          className="parallax-shape absolute opacity-20"
+          className="parallax-shape absolute opacity-40"
           style={{
             top: "350vh",
             left: "50%",
-            transform: `translateX(-50%) translateY(${scrollY * -0.2}px)`,
+            transform: `translateX(-50%) translateY(${scrollY * -0.65}px)`,
           }}
         >
           <div className="flex gap-8">
@@ -433,11 +451,11 @@ export default function App() {
 
         {/* Círculos concéntricos abajo */}
         <div
-          className="parallax-shape absolute opacity-25"
+          className="parallax-shape absolute opacity-45"
           style={{
             top: "400vh",
             left: "12vw",
-            transform: `translateY(${scrollY * -0.5}px)`,
+            transform: `translateY(${scrollY * -1.4}px)`,
           }}
         >
           <div className="relative w-56 h-56">
@@ -704,6 +722,85 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {projects.map((p, i) => {
               const Icon = p.icon;
+
+              if (p.featured) {
+                return (
+                  <a
+                    key={p.id}
+                    href={p.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`card-hover group relative ${p.span} bg-gradient-to-br from-lime-300/[0.07] via-white/[0.03] to-transparent backdrop-blur-sm border border-lime-300/25 rounded-2xl p-8 lg:p-10 overflow-hidden hover:border-lime-300/60 transition-all duration-500 cursor-pointer fade-up block`}
+                    style={{ animationDelay: `${i * 0.1}s` }}
+                  >
+                    <div className="glow-spot absolute -top-40 -right-40 h-80 w-80 rounded-full bg-lime-300/15 blur-3xl opacity-0 transition-opacity duration-700" />
+                    <div className="absolute top-4 right-4 font-mono text-[10px] uppercase tracking-widest text-lime-300/70 border border-lime-300/30 rounded-full px-3 py-1 bg-lime-300/5">
+                      · proyecto destacado
+                    </div>
+
+                    <div className="relative flex items-start justify-between mb-8">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-lg border border-lime-300/40 bg-lime-300/10 flex items-center justify-center group-hover:bg-lime-300/20 transition-colors">
+                          <Icon className="h-5 w-5 text-lime-300" />
+                        </div>
+                        <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+                          {p.id} · {p.kicker}
+                        </div>
+                      </div>
+                      <ArrowUpRight className="arrow-icon h-5 w-5 text-zinc-600 group-hover:text-lime-300 transition-all duration-300 mt-6" />
+                    </div>
+
+                    <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div>
+                        <h3 className="font-display text-4xl lg:text-5xl tracking-[-0.02em] mb-4">
+                          {p.title}
+                        </h3>
+                        <p className="font-body text-zinc-300 leading-relaxed mb-4">
+                          {p.result}
+                        </p>
+                        <p className="font-body text-sm text-zinc-500 leading-relaxed">
+                          {p.detail}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col justify-between gap-6">
+                        <div className="grid grid-cols-3 gap-3">
+                          {[
+                            { label: "scraping", desc: "Computrabajo AR" },
+                            { label: "IA/LLM", desc: "LLaMA 3.3 · Groq" },
+                            { label: "entrega", desc: "Bot Telegram" },
+                          ].map((feat) => (
+                            <div key={feat.label} className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-3">
+                              <div className="font-mono text-[9px] uppercase tracking-widest text-lime-300/70 mb-1">{feat.label}</div>
+                              <div className="font-body text-xs text-zinc-300">{feat.desc}</div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="pt-6 border-t border-white/5 flex items-end justify-between">
+                          <div>
+                            <div className="font-display text-4xl text-lime-300">{p.metric}</div>
+                            <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 max-w-[180px]">
+                              {p.metricLabel}
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5 justify-end max-w-[55%]">
+                            {p.tags.map((t) => (
+                              <span
+                                key={t}
+                                className="font-mono text-[10px] px-2 py-1 rounded-md bg-lime-300/5 border border-lime-300/15 text-zinc-400"
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                );
+              }
+
               return (
                 <a
                   key={p.id}
