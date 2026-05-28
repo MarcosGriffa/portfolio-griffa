@@ -688,260 +688,161 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════════
-            PROYECTOS — efecto Rockstar sticky scroll
-            La escena se queda fija y las cards suben sobre ella
-        ══════════════════════════════════════════════════════════════ */}
-        <section id="trabajo" className="relative">
-
-          {/* ── ESCENA FIJA (sticky) ── */}
-          <div
-            className="sticky top-0 h-screen z-0 overflow-hidden flex flex-col"
-            style={{
-              background: "linear-gradient(140deg, #08040f 0%, #030d0a 50%, #06040f 100%)",
-            }}
-          >
-            {/* Blobs vividos exclusivos de esta escena */}
-            <div className="absolute inset-0 pointer-events-none">
-              <div
-                className="absolute aurora-1 rounded-full"
-                style={{
-                  top: "-10%", left: "-8%",
-                  width: "70vw", height: "70vw",
-                  background: "radial-gradient(circle, rgba(139,92,246,0.55) 0%, transparent 60%)",
-                  filter: "blur(80px)",
-                }}
-              />
-              <div
-                className="absolute aurora-2 rounded-full"
-                style={{
-                  bottom: "-10%", right: "-8%",
-                  width: "65vw", height: "65vw",
-                  background: "radial-gradient(circle, rgba(190,242,100,0.50) 0%, transparent 60%)",
-                  filter: "blur(70px)",
-                }}
-              />
-              <div
-                className="absolute aurora-3 rounded-full"
-                style={{
-                  top: "30%", right: "15%",
-                  width: "45vw", height: "45vw",
-                  background: "radial-gradient(circle, rgba(34,211,238,0.28) 0%, transparent 60%)",
-                  filter: "blur(60px)",
-                }}
-              />
-            </div>
-
-            {/* Grid con más opacidad en la escena */}
-            <div className="absolute inset-0 grid-bg opacity-[0.07]" />
-
-            {/* Número decorativo gigante de fondo */}
-            <div
-              className="absolute bottom-0 right-0 font-display leading-none select-none pointer-events-none"
-              style={{
-                fontSize: "clamp(12rem,35vw,34rem)",
-                opacity: 0.035,
-                color: "white",
-                lineHeight: 0.85,
-              }}
-            >
-              03
-            </div>
-
-            {/* Líneas de escaneo horizontales sutiles */}
-            <div className="absolute inset-0 pointer-events-none"
-              style={{
-                backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.012) 3px, rgba(255,255,255,0.012) 4px)",
-              }}
-            />
-
-            {/* Contenido de la escena */}
-            <div className="relative z-10 flex flex-col justify-between h-full py-10 lg:py-14 max-w-7xl mx-auto px-6 lg:px-12 w-full">
-              {/* Top label */}
-              <div className="font-mono text-xs text-zinc-500 flex items-center gap-3">
+        {/* PROYECTOS */}
+        <section
+          id="trabajo"
+          className="relative max-w-7xl mx-auto px-6 lg:px-12 py-24 lg:py-32 border-t border-white/5"
+        >
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-16">
+            <div>
+              <div className="font-mono text-xs text-zinc-500 mb-3 flex items-center gap-3">
                 <span className="h-1.5 w-1.5 rounded-full bg-violet-400 blink" />
                 [003] · trabajo seleccionado
               </div>
-
-              {/* Título grande */}
-              <div>
-                <h2
-                  className="font-display leading-[0.88] tracking-[-0.04em] mb-8"
-                  style={{ fontSize: "clamp(3.5rem, 10vw, 10rem)" }}
-                >
-                  Lo que
-                  <br />
-                  <span className="italic text-lime-300">construí.</span>
-                </h2>
-
-                <div className="flex flex-wrap items-center gap-6">
-                  <div className="font-mono text-xs text-zinc-400 flex items-center gap-2">
-                    <span className="h-1 w-6 bg-lime-300/50 rounded-full" />
-                    {projects.length.toString().padStart(2, "0")} proyectos seleccionados
-                  </div>
-                  <div className="font-mono text-xs text-zinc-600 flex items-center gap-2 bounce-y">
-                    <span>↓</span>
-                    <span>scrolleá para explorar</span>
-                  </div>
-                </div>
-              </div>
+              <h2
+                className="font-display leading-[0.88] tracking-[-0.04em]"
+                style={{ fontSize: "clamp(3.5rem, 10vw, 10rem)" }}
+              >
+                Lo que
+                <br />
+                <span className="italic text-lime-300">construí.</span>
+              </h2>
+            </div>
+            <div className="font-mono text-xs text-zinc-500 pb-2">
+              {projects.length.toString().padStart(2, "0")} proyectos · ver en{" "}
+              <a
+                href="https://github.com/MarcosGriffa"
+                target="_blank"
+                rel="noreferrer"
+                className="text-lime-300 hover:underline"
+              >
+                github
+              </a>
             </div>
           </div>
 
-          {/* ── CARDS — gradiente progresivo que oscurece la escena desde abajo ── */}
-          <div className="relative z-10">
-            {/* Este div entra desde abajo y oscurece la escena suavemente, sin línea */}
-            <div
-              style={{
-                height: "90vh",
-                background:
-                  "linear-gradient(to bottom, transparent 0%, rgba(7,7,8,0.12) 18%, rgba(7,7,8,0.45) 42%, rgba(7,7,8,0.80) 65%, rgba(7,7,8,0.97) 85%, #070708 100%)",
-                pointerEvents: "none",
-              }}
-            />
-            <div className="bg-[#070708] pb-32">
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-8">
+          {/* Cards grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {projects.map((p, i) => {
+              const Icon = p.icon;
 
-              {/* Project count header */}
-              <div className="flex items-baseline justify-end mb-12 border-b border-white/5 pb-6">
-                <div className="font-mono text-xs text-zinc-500">
-                  {projects.length.toString().padStart(2, "0")} proyectos · ver en{" "}
+              if (p.featured) {
+                return (
                   <a
-                    href="https://github.com/MarcosGriffa"
+                    key={p.id}
+                    href={p.link}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-lime-300 hover:underline"
+                    className={`card-hover group relative ${p.span} bg-gradient-to-br from-lime-300/[0.07] via-white/[0.03] to-transparent backdrop-blur-sm border border-lime-300/25 rounded-2xl p-8 lg:p-10 overflow-hidden hover:border-lime-300/60 transition-all duration-500 cursor-pointer fade-up block`}
+                    style={{ animationDelay: `${i * 0.1}s` }}
                   >
-                    github
-                  </a>
-                </div>
-              </div>
+                    <div className="glow-spot absolute -top-40 -right-40 h-80 w-80 rounded-full bg-lime-300/15 blur-3xl opacity-0 transition-opacity duration-700" />
+                    <div className="absolute top-4 right-4 font-mono text-[10px] uppercase tracking-widest text-lime-300/70 border border-lime-300/30 rounded-full px-3 py-1 bg-lime-300/5">
+                      · proyecto destacado
+                    </div>
 
-              {/* Cards grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                {projects.map((p, i) => {
-                  const Icon = p.icon;
-
-                  if (p.featured) {
-                    return (
-                      <a
-                        key={p.id}
-                        href={p.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`card-hover group relative ${p.span} bg-gradient-to-br from-lime-300/[0.07] via-white/[0.03] to-transparent backdrop-blur-sm border border-lime-300/25 rounded-2xl p-8 lg:p-10 overflow-hidden hover:border-lime-300/60 transition-all duration-500 cursor-pointer fade-up block`}
-                        style={{ animationDelay: `${i * 0.1}s` }}
-                      >
-                        <div className="glow-spot absolute -top-40 -right-40 h-80 w-80 rounded-full bg-lime-300/15 blur-3xl opacity-0 transition-opacity duration-700" />
-                        <div className="absolute top-4 right-4 font-mono text-[10px] uppercase tracking-widest text-lime-300/70 border border-lime-300/30 rounded-full px-3 py-1 bg-lime-300/5">
-                          · proyecto destacado
+                    <div className="relative flex items-start justify-between mb-8">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-lg border border-lime-300/40 bg-lime-300/10 flex items-center justify-center group-hover:bg-lime-300/20 transition-colors">
+                          <Icon className="h-5 w-5 text-lime-300" />
                         </div>
-
-                        <div className="relative flex items-start justify-between mb-8">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-lg border border-lime-300/40 bg-lime-300/10 flex items-center justify-center group-hover:bg-lime-300/20 transition-colors">
-                              <Icon className="h-5 w-5 text-lime-300" />
-                            </div>
-                            <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
-                              {p.id} · {p.kicker}
-                            </div>
-                          </div>
-                          <ArrowUpRight className="arrow-icon h-5 w-5 text-zinc-600 group-hover:text-lime-300 transition-all duration-300 mt-6" />
+                        <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+                          {p.id} · {p.kicker}
                         </div>
+                      </div>
+                      <ArrowUpRight className="arrow-icon h-5 w-5 text-zinc-600 group-hover:text-lime-300 transition-all duration-300 mt-6" />
+                    </div>
 
-                        <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8">
-                          <div>
-                            <h3 className="font-display text-4xl lg:text-5xl tracking-[-0.02em] mb-4">
-                              {p.title}
-                            </h3>
-                            <p className="font-body text-zinc-300 leading-relaxed mb-4">{p.result}</p>
-                            <p className="font-body text-sm text-zinc-500 leading-relaxed">{p.detail}</p>
-                          </div>
-
-                          <div className="flex flex-col justify-between gap-6">
-                            <div className="grid grid-cols-3 gap-3">
-                              {[
-                                { label: "scraping", desc: "Computrabajo AR" },
-                                { label: "IA/LLM",   desc: "LLaMA 3.3 · Groq" },
-                                { label: "entrega",  desc: "Bot Telegram" },
-                              ].map((feat) => (
-                                <div key={feat.label} className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-3">
-                                  <div className="font-mono text-[9px] uppercase tracking-widest text-lime-300/70 mb-1">{feat.label}</div>
-                                  <div className="font-body text-xs text-zinc-300">{feat.desc}</div>
-                                </div>
-                              ))}
-                            </div>
-
-                            <div className="pt-6 border-t border-white/5 flex items-end justify-between">
-                              <div>
-                                <div className="font-display text-4xl text-lime-300">{p.metric}</div>
-                                <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 max-w-[180px]">
-                                  {p.metricLabel}
-                                </div>
-                              </div>
-                              <div className="flex flex-wrap gap-1.5 justify-end max-w-[55%]">
-                                {p.tags.map((t) => (
-                                  <span key={t} className="font-mono text-[10px] px-2 py-1 rounded-md bg-lime-300/5 border border-lime-300/15 text-zinc-400">
-                                    {t}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </a>
-                    );
-                  }
-
-                  return (
-                    <a
-                      key={p.id}
-                      href={p.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={`card-hover group relative ${p.span} bg-gradient-to-br from-white/[0.04] to-transparent backdrop-blur-sm border border-white/10 rounded-2xl p-8 lg:p-10 overflow-hidden hover:border-lime-300/40 transition-all duration-500 cursor-pointer fade-up block`}
-                      style={{ animationDelay: `${i * 0.1}s` }}
-                    >
-                      <div className="glow-spot absolute -top-32 -right-32 h-64 w-64 rounded-full bg-lime-300/10 blur-3xl opacity-0 transition-opacity duration-700" />
-
-                      <div className="relative flex items-start justify-between mb-8">
-                        <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-lg border border-white/10 bg-white/5 flex items-center justify-center group-hover:border-lime-300/40 group-hover:bg-lime-300/10 transition-colors">
-                            <Icon className="h-4 w-4 text-zinc-300 group-hover:text-lime-300 transition-colors" />
-                          </div>
-                          <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
-                            {p.id} · {p.kicker}
-                          </div>
-                        </div>
-                        <ArrowUpRight className="arrow-icon h-5 w-5 text-zinc-600 group-hover:text-lime-300 transition-all duration-300" />
+                    <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div>
+                        <h3 className="font-display text-4xl lg:text-5xl tracking-[-0.02em] mb-4">
+                          {p.title}
+                        </h3>
+                        <p className="font-body text-zinc-300 leading-relaxed mb-4">{p.result}</p>
+                        <p className="font-body text-sm text-zinc-500 leading-relaxed">{p.detail}</p>
                       </div>
 
-                      <h3 className="relative font-display text-3xl lg:text-4xl tracking-[-0.02em] mb-4">{p.title}</h3>
-                      <p className="relative font-body text-zinc-300 leading-relaxed mb-4">{p.result}</p>
-                      <p className="relative font-body text-sm text-zinc-500 leading-relaxed mb-8">{p.detail}</p>
-
-                      <div className="relative flex items-end justify-between mt-auto pt-6 border-t border-white/5">
-                        <div>
-                          <div className="font-display text-3xl text-lime-300">{p.metric}</div>
-                          <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 max-w-[180px]">
-                            {p.metricLabel}
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap gap-1.5 justify-end max-w-[60%]">
-                          {p.tags.map((t) => (
-                            <span key={t} className="font-mono text-[10px] px-2 py-1 rounded-md bg-white/5 border border-white/5 text-zinc-400">
-                              {t}
-                            </span>
+                      <div className="flex flex-col justify-between gap-6">
+                        <div className="grid grid-cols-3 gap-3">
+                          {[
+                            { label: "scraping", desc: "Computrabajo AR" },
+                            { label: "IA/LLM",   desc: "LLaMA 3.3 · Groq" },
+                            { label: "entrega",  desc: "Bot Telegram" },
+                          ].map((feat) => (
+                            <div key={feat.label} className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-3">
+                              <div className="font-mono text-[9px] uppercase tracking-widest text-lime-300/70 mb-1">{feat.label}</div>
+                              <div className="font-body text-xs text-zinc-300">{feat.desc}</div>
+                            </div>
                           ))}
                         </div>
+
+                        <div className="pt-6 border-t border-white/5 flex items-end justify-between">
+                          <div>
+                            <div className="font-display text-4xl text-lime-300">{p.metric}</div>
+                            <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 max-w-[180px]">
+                              {p.metricLabel}
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5 justify-end max-w-[55%]">
+                            {p.tags.map((t) => (
+                              <span key={t} className="font-mono text-[10px] px-2 py-1 rounded-md bg-lime-300/5 border border-lime-300/15 text-zinc-400">
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-            </div> {/* cierre bg-[#070708] */}
-          </div>   {/* cierre relative z-10 */}
+                    </div>
+                  </a>
+                );
+              }
+
+              return (
+                <a
+                  key={p.id}
+                  href={p.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`card-hover group relative ${p.span} bg-gradient-to-br from-white/[0.04] to-transparent backdrop-blur-sm border border-white/10 rounded-2xl p-8 lg:p-10 overflow-hidden hover:border-lime-300/40 transition-all duration-500 cursor-pointer fade-up block`}
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                >
+                  <div className="glow-spot absolute -top-32 -right-32 h-64 w-64 rounded-full bg-lime-300/10 blur-3xl opacity-0 transition-opacity duration-700" />
+
+                  <div className="relative flex items-start justify-between mb-8">
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-lg border border-white/10 bg-white/5 flex items-center justify-center group-hover:border-lime-300/40 group-hover:bg-lime-300/10 transition-colors">
+                        <Icon className="h-4 w-4 text-zinc-300 group-hover:text-lime-300 transition-colors" />
+                      </div>
+                      <div className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+                        {p.id} · {p.kicker}
+                      </div>
+                    </div>
+                    <ArrowUpRight className="arrow-icon h-5 w-5 text-zinc-600 group-hover:text-lime-300 transition-all duration-300" />
+                  </div>
+
+                  <h3 className="relative font-display text-3xl lg:text-4xl tracking-[-0.02em] mb-4">{p.title}</h3>
+                  <p className="relative font-body text-zinc-300 leading-relaxed mb-4">{p.result}</p>
+                  <p className="relative font-body text-sm text-zinc-500 leading-relaxed mb-8">{p.detail}</p>
+
+                  <div className="relative flex items-end justify-between mt-auto pt-6 border-t border-white/5">
+                    <div>
+                      <div className="font-display text-3xl text-lime-300">{p.metric}</div>
+                      <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 max-w-[180px]">
+                        {p.metricLabel}
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 justify-end max-w-[60%]">
+                      {p.tags.map((t) => (
+                        <span key={t} className="font-mono text-[10px] px-2 py-1 rounded-md bg-white/5 border border-white/5 text-zinc-400">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
         </section>
 
         {/* EXPERIENCIA */}
